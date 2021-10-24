@@ -20,7 +20,11 @@ int main(int argc, char **argv) {
 
 void add_watch_for_file_modified(int fd, const char* filename) {
 
-  // TODO: cannot be a directory
+  if (is_directory(filename)) {
+    printf("current path: %s, cannot be a directory\n", filename);
+    exit(EXIT_FAILURE);
+  }
+
   // TODO: link watch descriptor with filename
   int watch_fd = inotify_add_watch(fd, filename, IN_MODIFY);
 
@@ -49,3 +53,19 @@ void read_events_from_inotify(int fd) {
   }
 }
 
+bool is_directory(const char* filename) {
+
+  struct stat sb;
+
+  if (lstat(filename, &sb) == -1) {
+    perror("lstat()");
+    exit(EXIT_FAILURE);
+  }
+
+  switch (sb.st_mode & S_IFMT) {
+    case S_IFDIR:
+      return true;
+    default:
+      return false;
+  }
+}

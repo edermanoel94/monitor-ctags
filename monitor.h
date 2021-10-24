@@ -3,6 +3,9 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
+
+#include <sys/stat.h>
 
 #include <sys/inotify.h>
 
@@ -14,5 +17,7 @@
 void add_watch_for_file_modified(int fd, const char* filename);
 
 void read_events_from_inotify(int fd);
+
+bool is_directory(const char* filename);
 
 #endif
